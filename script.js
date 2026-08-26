@@ -150,7 +150,7 @@ chatForm.addEventListener("submit", async function (event) {
         );
 
         const response = await fetch(
-            "https://backend.souzou.in/chat"
+            "https://backend.souzou.in/chat",
             {
                 method: "POST",
 
