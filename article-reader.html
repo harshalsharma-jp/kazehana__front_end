@@ -2092,21 +2092,12 @@
 
         function getBackUrl(article) {
 
-            if (
-                article.category &&
-                article.subcategory
-            ) {
-
-                return
-
-                `subcategory.html?category=${encodeURIComponent(
+            if (article.category && article.subcategory) {
+                return `subcategory.html?category=${encodeURIComponent(
                     article.category
-                )
-                    }&subcategory=${encodeURIComponent(
-                        article.subcategory
-                    )
-                    }`;
-
+                )}&subcategory=${encodeURIComponent(
+                    article.subcategory
+                )}`;
             }
 
 
