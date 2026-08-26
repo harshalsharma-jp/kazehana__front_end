@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Explore Japan | Kazehana</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================
+           1. RESET & DESIGN TOKENS
+        ========================== */
+
+        #starfield {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        :root {
+            --bg-deep: #020203;
+            --bg-base: #050506;
+            --bg-elevated: #0a0a0c;
+
+            --foreground: #ededed;
+            --foreground-muted: #8a8f98;
+
+            --accent: #5e6ad2;
+            --accent-bright: #6872d9;
+
+            --border: rgba(255, 255, 255, 0.06);
+            --border-hover: rgba(255, 255, 255, 0.13);
+
+            --expo-out: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Inter", system-ui, sans-serif;
+            color: var(--foreground);
+            background:
+                radial-gradient(ellipse at top,
+                    #0a0a0f 0%,
+                    #050506 50%,
+                    #020203 100%);
+            overflow-x: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* =========================
+           2. AMBIENT BACKGROUND
+        ========================== */
+
+        .ambient-background {
+            position: fixed;
+            inset: 0;
+            z-index: -5;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        /* Decorative Japan Map */
+        .japan-map {
+            position: absolute;
+            top: 50%;
+            bottom: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw;
+            max-width: 900px;
+            opacity: 0.6999;
+            pointer-events: none;
+            filter: invert(1);
+        }
+
+        .japan-map img {
+            width: 100%;
+            height: auto;
+            display: block;
+            animation:
+                mapFloat 14s ease-in-out infinite;
+        }
+
+        @keyframes mapFloat {
+
+            0%,
+            100% {
+
+                transform:
+
+                    translateY(-50%) rotate(-3deg);
+
+            }
+
+
+            50% {
+
+                transform:
+
+                    translateY(calc(-50% - 18px)) rotate(-1deg);
+
+            }
+
+        }
+
+        /* Technical grid */
+        .grid-overlay {
+            position: absolute;
+            inset: 0;
+            opacity: 0.025;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.15) 1px,
+                    transparent 1px),
+                linear-gradient(90deg,
+                    rgba(255, 255, 255, 0.15) 1px,
+                    transparent 1px);
+            background-size: 64px 64px;
+        }
+
+        /* Ambient lighting blobs */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(130px);
+            animation: float 10s ease-in-out infinite;
+        }
+
+        .blob-one {
+            width: 900px;
+            height: 700px;
+            top: -400px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(94, 106, 210, 0.25);
+        }
+
+        .blob-two {
+            width: 600px;
+            height: 700px;
+            top: 25%;
+            left: -350px;
+            background: rgba(119, 85, 190, 0.13);
+            animation-duration: 12s;
+            animation-delay: -3s;
+        }
+
+        .blob-three {
+            width: 500px;
+            height: 600px;
+            top: 40%;
+            right: -250px;
+            background: rgba(74, 90, 210, 0.13);
+            animation-duration: 9s;
+            animation-delay: -5s;
+        }
+
+        .blob-four {
+            width: 600px;
+            height: 350px;
+            bottom: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(94, 106, 210, 0.12);
+            animation-duration: 11s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                translate: 0 0;
+            }
+
+            50% {
+                translate: 0 -22px;
+            }
+        }
+
+        /* =========================
+           3. PAGE HEADER
+        ========================== */
+
+        .page-header {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 120px 24px 70px;
+            text-align: center;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+
+            margin-bottom: 20px;
+            padding: 8px 14px;
+
+            border: 1px solid rgba(94, 106, 210, 0.3);
+            border-radius: 999px;
+
+            color: #aeb4ff;
+            background: rgba(94, 106, 210, 0.08);
+
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        .eyebrow-dot {
+            width: 6px;
+            height: 6px;
+
+            border-radius: 50%;
+            background: var(--accent);
+
+            box-shadow: 0 0 12px rgba(94, 106, 210, 0.9);
+        }
+
+        .page-header h1 {
+            max-width: 900px;
+            margin: 0 auto;
+
+            font-size: clamp(3rem, 8vw, 6.5rem);
+            font-weight: 600;
+            letter-spacing: -0.05em;
+            line-height: 0.95;
+
+            background:
+                linear-gradient(to bottom,
+                    #ffffff,
+                    rgba(255, 255, 255, 0.7));
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+        }
+
+        .page-header h1 span {
+            background:
+                linear-gradient(90deg,
+                    #5e6ad2,
+                    #9aa4ff,
+                    #5e6ad2);
+
+            background-size: 200% 100%;
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+
+            animation: shimmer 5s linear infinite;
+        }
+
+        @keyframes shimmer {
+            from {
+                background-position: 200% center;
+            }
+
+            to {
+                background-position: -200% center;
+            }
+        }
+
+        .page-header p {
+            max-width: 650px;
+            margin: 28px auto 0;
+
+            color: #ffffff;
+
+            font-size: clamp(1rem, 2vw, 1.15rem);
+            line-height: 1.8;
+        }
+
+        /* =========================
+           4. CATEGORY SECTION
+        ========================== */
+
+        .categories-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px 130px;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        /* Base category card */
+
+        .category-card {
+            position: relative;
+            aspect-ratio: 1 / 1;
+
+            display: flex;
+            align-items: flex-end;
+
+            overflow: hidden;
+
+            border: 1px solid var(--border);
+            border-radius: 20px;
+
+            background: var(--bg-elevated);
+
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.02),
+                0 12px 35px rgba(0, 0, 0, 0.35),
+                0 0 60px rgba(0, 0, 0, 0.15);
+
+            transition:
+                transform 300ms var(--expo-out),
+                border-color 300ms ease,
+                box-shadow 300ms ease;
+        }
+
+        /* Make Festivals the centered final card */
+
+
+        .category-card:hover {
+            transform: translateY(-6px);
+
+            border-color: var(--border-hover);
+
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.08),
+                0 20px 50px rgba(0, 0, 0, 0.5),
+                0 0 90px rgba(94, 106, 210, 0.12);
+        }
+
+        /* Image */
+
+        .category-image {
+            position: absolute;
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            opacity: 0.72;
+
+            transform: scale(1.02);
+
+            transition:
+                transform 700ms var(--expo-out),
+                opacity 300ms ease;
+        }
+
+        .category-card:hover .category-image {
+            transform: scale(1.07);
+            opacity: 0.85;
+        }
+
+        /* Dark readability overlay */
+
+        .category-overlay {
+            position: absolute;
+            inset: 0;
+
+            background:
+                linear-gradient(to top,
+                    rgba(2, 2, 3, 0.98) 0%,
+                    rgba(2, 2, 3, 0.75) 30%,
+                    rgba(2, 2, 3, 0.1) 70%,
+                    rgba(2, 2, 3, 0.05) 100%);
+        }
+
+        /* Top inner highlight */
+
+        .category-card::before {
+            content: "";
+
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+
+            pointer-events: none;
+
+            border-radius: inherit;
+
+            background:
+                linear-gradient(to bottom,
+                    rgba(255, 255, 255, 0.1),
+                    transparent 15%);
+
+            opacity: 0.55;
+        }
+
+        /* Mouse spotlight */
+
+        .category-card::after {
+            content: "";
+
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+
+            pointer-events: none;
+
+            background:
+                radial-gradient(300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                    rgba(94, 106, 210, 0.2),
+                    transparent 45%);
+
+            opacity: 0;
+
+            transition: opacity 300ms ease;
+        }
+
+        .category-card:hover::after {
+            opacity: 1;
+        }
+
+        /* Content */
+
+        .category-content {
+            position: relative;
+            z-index: 3;
+
+            width: 100%;
+            padding: 28px;
+        }
+
+        .category-number {
+            display: block;
+
+            margin-bottom: 10px;
+
+            color: rgba(255, 255, 255, 0.45);
+
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.16em;
+        }
+
+        .category-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .category-title {
+            font-size: clamp(1.4rem, 2.5vw, 2rem);
+            font-weight: 600;
+            letter-spacing: -0.04em;
+            line-height: 1.05;
+        }
+
+        .category-arrow {
+            flex-shrink: 0;
+
+            width: 38px;
+            height: 38px;
+
+            display: grid;
+            place-items: center;
+
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 50%;
+
+            background: rgba(255, 255, 255, 0.06);
+
+            font-size: 20px;
+
+            transition:
+                transform 300ms var(--expo-out),
+                background 300ms ease,
+                border-color 300ms ease;
+        }
+
+        .category-card:hover .category-arrow {
+            transform: translate(3px, -3px);
+
+            background: rgba(94, 106, 210, 0.35);
+            border-color: rgba(94, 106, 210, 0.55);
+        }
+
+        .category-description {
+            margin-top: 12px;
+
+            max-width: 310px;
+
+            color: rgba(255, 255, 255, 0.65);
+
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* =========================
+           5. RESPONSIVE
+        ========================== */
+
+        @media (max-width: 850px) {
+
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .category-card:last-child {
+                grid-column: auto;
+            }
+
+            .page-header {
+                padding-top: 90px;
+                padding-bottom: 50px;
+            }
+        }
+
+        @media (max-width: 560px) {
+
+            .page-header {
+                padding:
+                    80px 20px 45px;
+            }
+
+            .categories-section {
+                padding:
+                    0 16px 90px;
+            }
+
+            .category-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+
+            .category-card {
+                aspect-ratio: 1 / 1;
+                border-radius: 16px;
+            }
+
+            .category-content {
+                padding: 22px;
+            }
+
+            .category-description {
+                font-size: 13px;
+            }
+
+            .category-arrow {
+                width: 34px;
+                height: 34px;
+            }
+        }
+
+        /* =========================
+           6. REDUCED MOTION
+        ========================== */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        .back-to-chatbot {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+
+            width: 48px;
+            height: 48px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 50%;
+
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+
+            color: white;
+            font-size: 28px;
+            text-decoration: none;
+
+            cursor: pointer;
+            z-index: 1000;
+
+            transition:
+                transform 0.3s ease,
+                background 0.3s ease,
+                box-shadow 0.3s ease;
+        }
+
+        .back-to-chatbot:hover {
+            transform: translateX(-5px);
+
+            background: rgba(100, 180, 255, 0.18);
+
+            box-shadow:
+                0 0 20px rgba(70, 150, 255, 0.45),
+                0 0 45px rgba(70, 150, 255, 0.2);
+        }
+
+
+        @media (max-width: 850px) {
+            .japan-map {
+                width: 95vw;
+                max-width: none;
+                opacity: 0.35;
+                top: 45%;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .japan-map {
+                width: 125vw;
+                max-width: none;
+                top: 42%;
+                left: 50%;
+                opacity: 0.28;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="index.html" class="back-to-chatbot" aria-label="Back to Kazehana chatbot">
+        ←
+    </a>
+
+    <!-- Ambient background -->
+    <div class="ambient-background">
+        <canvas id="starfield"></canvas>
+        <div class="grid-overlay"></div>
+
+        <!-- Working Japan Map SVG CDN -->
+        <div class="japan-map">
+            <img src="https://cdn.jsdelivr.net/gh/djaiss/mapsicon@master/all/jp/vector.svg" alt="" aria-hidden="true">
+        </div>
+
+        <div class="blob blob-one"></div>
+        <div class="blob blob-two"></div>
+        <div class="blob blob-three"></div>
+        <div class="blob blob-four"></div>
+    </div>
+
+
+    <!-- Page header -->
+    <header class="page-header">
+
+        <div class="eyebrow">
+            <span class="eyebrow-dot"></span>
+            Discover Japan
+        </div>
+
+        <h1>
+            Explore Japan<br>
+            <span>Beyond the surface.</span>
+        </h1>
+
+        <p>
+            Step into the stories, traditions, flavors, and legends
+            that make Japan a world waiting to be discovered.
+        </p>
+
+    </header>
+
+
+    <!-- Categories -->
+    <main class="categories-section">
+
+        <section class="category-grid">
+
+            <!-- 01 Culture -->
+            <a href="explore.html?category=culture" class="category-card" aria-label="Explore Japanese Culture">
+
+                <img class="category-image"
+                    src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=900&q=85"
+                    alt="Japanese cultural scenery">
+
+                <div class="category-overlay"></div>
+
+                <div class="category-content">
+
+                    <span class="category-number">
+                        01 / 05
+                    </span>
+
+                    <div class="category-title-row">
+
+                        <h2 class="category-title">
+                            Culture
+                        </h2>
+
+                        <span class="category-arrow">
+                            ↗
+                        </span>
+
+                    </div>
+
+                    <p class="category-description">
+                        Discover the traditions, daily life, and identity
+                        that shape Japan.
+                    </p>
+
+                </div>
+
+            </a>
+
+
+            <!-- 02 Food & Drinks -->
+            <a href="explore.html?category=food-drinks" class="category-card"
+                aria-label="Explore Japanese Food and Drinks">
+
+                <img class="category-image"
+                    src="https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?auto=format&fit=crop&w=900&q=85"
+                    alt="Japanese food">
+
+                <div class="category-overlay"></div>
+
+                <div class="category-content">
+
+                    <span class="category-number">
+                        02 / 05
+                    </span>
+
+                    <div class="category-title-row">
+
+                        <h2 class="category-title">
+                            Food &amp; Drinks
+                        </h2>
+
+                        <span class="category-arrow">
+                            ↗
+                        </span>
+
+                    </div>
+
+                    <p class="category-description">
+                        Explore Japan through its flavors, regional dishes,
+                        and culinary traditions.
+                    </p>
+
+                </div>
+
+            </a>
+
+
+            <!-- 03 History -->
+            <a href="explore.html?category=history" class="category-card" aria-label="Explore Japanese History">
+
+                <img class="category-image"
+                    src="https://images.unsplash.com/photo-1545569341-9eb8b30979d9?auto=format&fit=crop&w=900&q=85"
+                    alt="Historic Japanese architecture">
+
+                <div class="category-overlay"></div>
+
+                <div class="category-content">
+
+                    <span class="category-number">
+                        03 / 05
+                    </span>
+
+                    <div class="category-title-row">
+
+                        <h2 class="category-title">
+                            History
+                        </h2>
+
+                        <span class="category-arrow">
+                            ↗
+                        </span>
+
+                    </div>
+
+                    <p class="category-description">
+                        Travel through the people, eras, and events that
+                        shaped Japan.
+                    </p>
+
+                </div>
+
+            </a>
+
+
+            <!-- 04 Mythology & Folklore -->
+            <a href="explore.html?category=mythology-folklore" class="category-card"
+                aria-label="Explore Japanese Mythology and Folklore">
+
+                <img class="category-image"
+                    src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=900&q=85"
+                    alt="Japanese mythology inspired shrine">
+
+                <div class="category-overlay"></div>
+
+                <div class="category-content">
+
+                    <span class="category-number">
+                        04 / 05
+                    </span>
+
+                    <div class="category-title-row">
+
+                        <h2 class="category-title">
+                            Mythology &amp; Folklore
+                        </h2>
+
+                        <span class="category-arrow">
+                            ↗
+                        </span>
+
+                    </div>
+
+                    <p class="category-description">
+                        Enter a world of ancient gods, spirits, creatures,
+                        and timeless legends.
+                    </p>
+
+                </div>
+
+            </a>
+
+
+            <!-- 05 Festivals -->
+            <a href="explore.html?category=festivals" class="category-card" aria-label="Explore Japanese Festivals">
+
+                <img class="category-image"
+                    src="https://images.unsplash.com/photo-1528164344705-47542687000d?auto=format&fit=crop&w=900&q=85"
+                    alt="Japanese festival celebration">
+
+                <div class="category-overlay"></div>
+
+                <div class="category-content">
+
+                    <span class="category-number">
+                        05 / 05
+                    </span>
+
+                    <div class="category-title-row">
+
+                        <h2 class="category-title">
+                            Festivals
+                        </h2>
+
+                        <span class="category-arrow">
+                            ↗
+                        </span>
+
+                    </div>
+
+                    <p class="category-description">
+                        Experience the color, energy, rituals, and celebrations
+                        of Japan's festivals.
+                    </p>
+
+                </div>
+
+            </a>
+
+            <!-- 06 Other Side of Japan -->
+            <a href="explore.html?category=other-side-of-japan" class="category-card"
+                aria-label="Explore the Other Side of Japan">
+
+                <img class="category-image"
+                    src="https://images.unsplash.com/photo-1493780474015-ba834fd0ce2f?auto=format&fit=crop&w=900&q=85"
+                    alt="A different side of Japan">
+
+                <div class="category-overlay"></div>
+
+                <div class="category-content">
+
+                    <span class="category-number">
+                        06 / 06
+                    </span>
+
+                    <div class="category-title-row">
+
+                        <h2 class="category-title">
+                            Other Side of Japan
+                        </h2>
+
+                        <span class="category-arrow">
+                            ↗
+                        </span>
+
+                    </div>
+
+                    <p class="category-description">
+                        Look beyond the surface and explore the social pressures,
+                        isolation, overwork, and hidden struggles within modern Japan.
+                    </p>
+
+                </div>
+            </a>
+
+        </section>
+
+    </main>
+
+
+    <!-- Mouse tracking spotlight -->
+    <script>
+        const categoryCards = document.querySelectorAll(".category-card");
+
+        categoryCards.forEach((card) => {
+
+            card.addEventListener("mousemove", (event) => {
+
+                const rect = card.getBoundingClientRect();
+
+                const x =
+                    event.clientX - rect.left;
+
+                const y =
+                    event.clientY - rect.top;
+
+                card.style.setProperty(
+                    "--mouse-x",
+                    `${x}px`
+                );
+
+                card.style.setProperty(
+                    "--mouse-y",
+                    `${y}px`
+                );
+
+            });
+
+        });
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initStars();
+        });
+
+        // --- Background Tiny Stars ---
+        let stars = [];
+        const STAR_COUNT = 540;
+
+        function initStars() {
+            stars = [];
+            for (let i = 0; i < STAR_COUNT; i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: Math.random() * 1.2 + 0.3,
+                    baseAlpha: Math.random() * 0.7 + 0.3,
+                    alpha: Math.random(),
+                    twinkleSpeed: (Math.random() * 0.02 + 0.005) * (Math.random() < 0.5 ? 1 : -1),
+                    driftX: (Math.random() - 0.5) * 0.05,
+                    driftY: (Math.random() - 0.5) * 0.05
+                });
+            }
+        }
+
+        // --- Shooting Stars ---
+        let shootingStars = [];
+
+        function createShootingStar() {
+            shootingStars.push({
+                x: Math.random() * width * 0.8,
+                y: Math.random() * (height * 0.5),
+                length: Math.random() * 80 + 40,
+                speed: Math.random() * 8 + 6,
+                angle: Math.PI / 4, // 45 degrees downward movement
+                alpha: 1,
+                decay: Math.random() * 0.015 + 0.01,
+                size: Math.random() * 1.5 + 0.8
+            });
+        }
+
+        // Trigger random shooting star every 2-5 seconds
+        function scheduleShootingStar() {
+            const delay = Math.random() * 3000 + 2000;
+            setTimeout(() => {
+                createShootingStar();
+                scheduleShootingStar();
+            }, delay);
+        }
+
+        // --- Animation Loop ---
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            // 1. Draw static / drifting stars
+            stars.forEach(star => {
+                star.alpha += star.twinkleSpeed;
+                if (star.alpha >= 1 || star.alpha <= 0.2) {
+                    star.twinkleSpeed = -star.twinkleSpeed;
+                }
+
+                star.x += star.driftX;
+                star.y += star.driftY;
+
+                // Wrap around edges
+                if (star.x < 0) star.x = width;
+                if (star.x > width) star.x = 0;
+                if (star.y < 0) star.y = height;
+                if (star.y > height) star.y = 0;
+
+                ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha * star.baseAlpha})`;
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // 2. Draw shooting stars
+            for (let i = shootingStars.length - 1; i >= 0; i--) {
+                const s = shootingStars[i];
+
+                const endX = s.x - Math.cos(s.angle) * s.length;
+                const endY = s.y - Math.sin(s.angle) * s.length;
+
+                const gradient = ctx.createLinearGradient(s.x, s.y, endX, endY);
+                gradient.addColorStop(0, `rgba(255, 255, 255, ${s.alpha})`);
+                gradient.addColorStop(0.3, `rgba(174, 180, 255, ${s.alpha * 0.6})`);
+                gradient.addColorStop(1, `rgba(94, 106, 210, 0)`);
+
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = s.size;
+                ctx.beginPath();
+                ctx.moveTo(s.x, s.y);
+                ctx.lineTo(endX, endY);
+                ctx.stroke();
+
+                // Head glow point
+                ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.size * 1.2, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Update position and fade out
+                s.x += Math.cos(s.angle) * s.speed;
+                s.y += Math.sin(s.angle) * s.speed;
+                s.alpha -= s.decay;
+
+                if (s.alpha <= 0) {
+                    shootingStars.splice(i, 1);
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        initStars();
+        scheduleShootingStar();
+        animate();
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Profile | Kazehana</title>
+
+    <style>
+
+        /* =========================
+           RESET
+        ========================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Segoe UI", sans-serif;
+            color: #2d2d2d;
+
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(250, 159, 197, 0.35),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    #fffdfd,
+                    #fff3f8,
+                    #ffe7f0
+                );
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 25px;
+        }
+
+
+        /* =========================
+           BACK BUTTON
+        ========================= */
+
+        .back-button {
+            position: fixed;
+
+            top: 25px;
+            left: 25px;
+
+            border: none;
+
+            background: rgba(255, 255, 255, 0.5);
+
+            backdrop-filter: blur(20px);
+
+            padding: 12px 18px;
+
+            border-radius: 14px;
+
+            cursor: pointer;
+
+            font-size: 1rem;
+            font-weight: 600;
+
+            color: #a84c67;
+
+            border: 1px solid rgba(255, 255, 255, 0.5);
+
+            box-shadow:
+                0 8px 25px rgba(0, 0, 0, 0.08);
+
+            transition: 0.3s;
+        }
+
+        .back-button:hover {
+            transform: translateX(-4px);
+
+            background: #fa9fc5;
+
+            color: white;
+
+            box-shadow:
+                0 12px 30px rgba(250, 159, 197, 0.35);
+        }
+
+
+        /* =========================
+           PROFILE CARD
+        ========================= */
+
+        .profile-card {
+            width: 100%;
+            max-width: 470px;
+
+            padding: 40px;
+
+            border-radius: 28px;
+
+            background:
+                rgba(255, 255, 255, 0.42);
+
+            backdrop-filter:
+                blur(25px);
+
+            -webkit-backdrop-filter:
+                blur(25px);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.6);
+
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.12);
+
+            text-align: center;
+        }
+
+
+        /* =========================
+           LOGO
+        ========================= */
+
+        .profile-logo {
+            width: 110px;
+            height: 110px;
+
+            margin:
+                0 auto 20px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255, 255, 255, 0.55);
+
+            padding: 8px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.1);
+
+            animation:
+                floatLogo 4s ease-in-out infinite;
+        }
+
+        .profile-logo img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: contain;
+        }
+
+        @keyframes floatLogo {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+
+        }
+
+
+        /* =========================
+           TEXT
+        ========================= */
+
+        h1 {
+            color: #a84c67;
+
+            font-size: 2rem;
+
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+
+            line-height: 1.6;
+
+            margin-bottom: 30px;
+        }
+
+        .account-label {
+            font-size: 0.8rem;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+
+            color: #a84c67;
+
+            margin-bottom: 8px;
+        }
+
+        .username {
+            font-size: 1.5rem;
+
+            font-weight: 700;
+
+            color: #2d2d2d;
+
+            margin-bottom: 8px;
+        }
+
+        .status {
+            display: inline-block;
+
+            padding: 7px 14px;
+
+            border-radius: 999px;
+
+            background:
+                rgba(250, 159, 197, 0.25);
+
+            color: #a84c67;
+
+            font-size: 0.85rem;
+
+            font-weight: 600;
+
+            margin-bottom: 25px;
+        }
+
+
+        /* =========================
+           FORMS
+        ========================= */
+
+        .form-section {
+            display: none;
+
+            animation:
+                fadeIn 0.35s ease;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            font-size: 0.9rem;
+
+            font-weight: 600;
+
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+
+            padding: 14px 16px;
+
+            border-radius: 14px;
+
+            border:
+                1px solid rgba(250, 159, 197, 0.25);
+
+            outline: none;
+
+            background:
+                rgba(255, 255, 255, 0.65);
+
+            font-size: 1rem;
+
+            transition: 0.3s;
+        }
+
+        .form-group input:focus {
+
+            border-color:
+                #fa9fc5;
+
+            box-shadow:
+                0 0 0 3px rgba(250, 159, 197, 0.2);
+        }
+
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .button {
+            width: 100%;
+
+            border: none;
+
+            padding: 15px;
+
+            border-radius: 15px;
+
+            cursor: pointer;
+
+            font-size: 1rem;
+
+            font-weight: 700;
+
+            transition: 0.3s;
+
+            margin-top: 10px;
+        }
+
+        .primary-button {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fa9fc5,
+                    #ff72a1
+                );
+
+            color: white;
+
+            box-shadow:
+                0 10px 25px rgba(250, 159, 197, 0.35);
+        }
+
+        .primary-button:hover {
+
+            transform:
+                translateY(-3px);
+
+            box-shadow:
+                0 15px 35px rgba(250, 159, 197, 0.45);
+        }
+
+        .secondary-button {
+
+            background:
+                rgba(255, 255, 255, 0.55);
+
+            color:
+                #a84c67;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .secondary-button:hover {
+
+            background:
+                rgba(250, 159, 197, 0.18);
+
+            transform:
+                translateY(-2px);
+        }
+
+        .signout-button {
+
+            background:
+                rgba(214, 69, 69, 0.12);
+
+            color:
+                #c23d3d;
+        }
+
+        .signout-button:hover {
+
+            background:
+                rgba(214, 69, 69, 0.2);
+
+            transform:
+                translateY(-2px);
+        }
+
+
+        /* =========================
+           SWITCH TEXT
+        ========================= */
+
+        .switch-text {
+
+            margin-top: 20px;
+
+            color: #666;
+
+            font-size: 0.9rem;
+        }
+
+        .switch-button {
+
+            border: none;
+
+            background: none;
+
+            color: #c45b7a;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            font-size: 0.9rem;
+        }
+
+        .switch-button:hover {
+            text-decoration: underline;
+        }
+
+
+        /* =========================
+           MESSAGE
+        ========================= */
+
+        .message {
+
+            min-height: 20px;
+
+            margin-top: 15px;
+
+            font-size: 0.9rem;
+
+            font-weight: 600;
+        }
+
+        .message.success {
+            color: #318a4a;
+        }
+
+        .message.error {
+            color: #c23d3d;
+        }
+
+
+        /* =========================
+           HIDDEN
+        ========================= */
+
+        .hidden {
+            display: none !important;
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .profile-card {
+                padding: 30px 22px;
+            }
+
+            .back-button {
+                position: absolute;
+
+                top: 15px;
+                left: 15px;
+
+                padding: 10px 14px;
+            }
+
+            h1 {
+                font-size: 1.7rem;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- BACK TO CHATBOT -->
+
+    <button
+        class="back-button"
+        onclick="window.location.href='index.html'"
+    >
+        ← Back to Kazehana
+    </button>
+
+
+    <!-- PROFILE CARD -->
+
+    <main class="profile-card">
+
+
+        <!-- LOGO -->
+
+        <div class="profile-logo">
+
+            <img
+                src="Kazehana_logo.png"
+                alt="Kazehana Logo"
+            >
+
+        </div>
+
+
+        <h1>風花 | Profile</h1>
+
+
+        <!-- =========================
+             GUEST VIEW
+        ========================= -->
+
+        <section id="guest-view">
+
+            <p class="subtitle">
+
+                You're currently exploring Kazehana as a guest.
+                Create an account to keep your chats across sessions.
+
+            </p>
+
+
+            <button
+                class="button primary-button"
+                id="show-login-btn"
+            >
+                Login
+            </button>
+
+
+            <button
+                class="button secondary-button"
+                id="show-register-btn"
+            >
+                Create Account
+            </button>
+
+        </section>
+
+
+        <!-- =========================
+             LOGIN FORM
+        ========================= -->
+
+        <section
+            id="login-section"
+            class="form-section"
+        >
+
+            <p class="subtitle">
+                Welcome back to Kazehana 🌸
+            </p>
+
+
+            <div class="form-group">
+
+                <label for="login-username">
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    id="login-username"
+                    placeholder="Enter your username"
+                    autocomplete="username"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="login-password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="login-password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                >
+
+            </div>
+
+
+            <button
+                class="button primary-button"
+                id="login-btn"
+            >
+                Login
+            </button>
+
+
+            <p class="switch-text">
+
+                Don't have an account?
+
+                <button
+                    class="switch-button"
+                    id="switch-register-btn"
+                >
+                    Create one
+                </button>
+
+            </p>
+
+        </section>
+
+
+        <!-- =========================
+             REGISTER FORM
+        ========================= -->
+
+        <section
+            id="register-section"
+            class="form-section"
+        >
+
+            <p class="subtitle">
+                Create your Kazehana account 🌸
+            </p>
+
+
+            <div class="form-group">
+
+                <label for="register-username">
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    id="register-username"
+                    placeholder="Choose a username"
+                    autocomplete="username"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="register-password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="register-password"
+                    placeholder="At least 6 characters"
+                    autocomplete="new-password"
+                >
+
+            </div>
+
+
+            <button
+                class="button primary-button"
+                id="register-btn"
+            >
+                Create Account
+            </button>
+
+
+            <p class="switch-text">
+
+                Already have an account?
+
+                <button
+                    class="switch-button"
+                    id="switch-login-btn"
+                >
+                    Login
+                </button>
+
+            </p>
+
+        </section>
+
+
+        <!-- =========================
+             LOGGED-IN VIEW
+        ========================= -->
+
+        <section
+            id="loggedin-view"
+            class="hidden"
+        >
+
+            <p class="account-label">
+                Logged in as
+            </p>
+
+
+            <div
+                class="username"
+                id="profile-username"
+            >
+                Username
+            </div>
+
+
+            <div class="status">
+                🌸 Kazehana Member
+            </div>
+
+
+            <p class="subtitle">
+
+                Your account is active. Your chats can now be connected
+                to your account.
+
+            </p>
+
+
+            <button
+                class="button signout-button"
+                id="signout-btn"
+            >
+                Sign Out
+            </button>
+
+        </section>
+
+
+        <!-- STATUS MESSAGE -->
+
+        <div id="message" class="message"></div>
+
+
+    </main>
+
+
+    <script>
+
+        /* =========================
+           BACKEND URL
+        ========================= */
+
+        const BACKEND_URL =
+            "http://127.0.0.1:5000";
+
+
+        /* =========================
+           ELEMENTS
+        ========================= */
+
+        const guestView =
+            document.getElementById("guest-view");
+
+        const loginSection =
+            document.getElementById("login-section");
+
+        const registerSection =
+            document.getElementById("register-section");
+
+        const loggedinView =
+            document.getElementById("loggedin-view");
+
+        const messageBox =
+            document.getElementById("message");
+
+        const profileUsername =
+            document.getElementById("profile-username");
+
+
+        /* =========================
+           GET LOGGED-IN USER
+        ========================= */
+
+        function getLoggedInUser() {
+
+            try {
+
+                return JSON.parse(
+                    localStorage.getItem("kazehanaUser")
+                );
+
+            } catch (error) {
+
+                return null;
+
+            }
+
+        }
+
+
+        /* =========================
+           SHOW MESSAGE
+        ========================= */
+
+        function showMessage(text, type) {
+
+            messageBox.textContent = text;
+
+            messageBox.className =
+                "message " + type;
+
+        }
+
+
+        /* =========================
+           HIDE ALL SECTIONS
+        ========================= */
+
+        function hideAllSections() {
+
+            guestView.classList.add("hidden");
+
+            loginSection.classList.remove("active");
+
+            registerSection.classList.remove("active");
+
+            loggedinView.classList.add("hidden");
+
+            messageBox.textContent = "";
+
+            messageBox.className = "message";
+
+        }
+
+
+        /* =========================
+           SHOW GUEST
+        ========================= */
+
+        function showGuestView() {
+
+            hideAllSections();
+
+            guestView.classList.remove("hidden");
+
+        }
+
+
+        /* =========================
+           SHOW LOGIN
+        ========================= */
+
+        function showLogin() {
+
+            hideAllSections();
+
+            loginSection.classList.add("active");
+
+        }
+
+
+        /* =========================
+           SHOW REGISTER
+        ========================= */
+
+        function showRegister() {
+
+            hideAllSections();
+
+            registerSection.classList.add("active");
+
+        }
+
+
+        /* =========================
+           SHOW LOGGED-IN PROFILE
+        ========================= */
+
+        function showLoggedInProfile(user) {
+
+            hideAllSections();
+
+            profileUsername.textContent =
+                user.username;
+
+            loggedinView.classList.remove("hidden");
+
+        }
+
+
+        /* =========================
+           CHECK LOGIN ON PAGE LOAD
+        ========================= */
+
+        const currentUser =
+            getLoggedInUser();
+
+        if (currentUser && currentUser.username) {
+
+            showLoggedInProfile(currentUser);
+
+        } else {
+
+            showGuestView();
+
+        }
+
+
+        /* =========================
+           NAVIGATION BUTTONS
+        ========================= */
+
+        document
+            .getElementById("show-login-btn")
+            .addEventListener(
+                "click",
+                showLogin
+            );
+
+
+        document
+            .getElementById("show-register-btn")
+            .addEventListener(
+                "click",
+                showRegister
+            );
+
+
+        document
+            .getElementById("switch-register-btn")
+            .addEventListener(
+                "click",
+                showRegister
+            );
+
+
+        document
+            .getElementById("switch-login-btn")
+            .addEventListener(
+                "click",
+                showLogin
+            );
+
+
+        /* =========================
+           REGISTER
+        ========================= */
+
+        document
+            .getElementById("register-btn")
+            .addEventListener(
+                "click",
+                async () => {
+
+                    const username =
+                        document
+                            .getElementById(
+                                "register-username"
+                            )
+                            .value
+                            .trim();
+
+                    const password =
+                        document
+                            .getElementById(
+                                "register-password"
+                            )
+                            .value
+                            .trim();
+
+
+                    if (!username || !password) {
+
+                        showMessage(
+                            "Please enter a username and password.",
+                            "error"
+                        );
+
+                        return;
+
+                    }
+
+
+                    try {
+
+                        showMessage(
+                            "Creating your account...",
+                            ""
+                        );
+
+
+                        const response =
+                            await fetch(
+                                BACKEND_URL + "/register",
+                                {
+                                    method: "POST",
+
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json"
+                                    },
+
+                                    body:
+                                        JSON.stringify({
+                                            username:
+                                                username,
+
+                                            password:
+                                                password
+                                        })
+                                }
+                            );
+
+
+                        const data =
+                            await response.json();
+
+
+                        if (data.success) {
+
+                            /* Save basic UI login state */
+
+                            localStorage.setItem(
+                                "kazehanaUser",
+
+                                JSON.stringify({
+                                    user_id:
+                                        data.user_id,
+
+                                    username:
+                                        data.username
+                                })
+                            );
+
+
+                            showMessage(
+                                "Account created successfully! 🌸",
+                                "success"
+                            );
+
+
+                            setTimeout(
+                                () => {
+
+                                    showLoggedInProfile(
+                                        data
+                                    );
+
+                                },
+                                700
+                            );
+
+                        }
+
+                        else {
+
+                            showMessage(
+                                data.message ||
+                                "Registration failed.",
+                                "error"
+                            );
+
+                        }
+
+                    }
+
+                    catch (error) {
+
+                        console.error(error);
+
+                        showMessage(
+                            "Cannot connect to the Kazehana backend.",
+                            "error"
+                        );
+
+                    }
+
+                }
+            );
+
+
+        /* =========================
+           LOGIN
+        ========================= */
+
+        document
+            .getElementById("login-btn")
+            .addEventListener(
+                "click",
+                async () => {
+
+                    const username =
+                        document
+                            .getElementById(
+                                "login-username"
+                            )
+                            .value
+                            .trim();
+
+                    const password =
+                        document
+                            .getElementById(
+                                "login-password"
+                            )
+                            .value
+                            .trim();
+
+
+                    if (!username || !password) {
+
+                        showMessage(
+                            "Please enter your username and password.",
+                            "error"
+                        );
+
+                        return;
+
+                    }
+
+
+                    try {
+
+                        showMessage(
+                            "Logging in...",
+                            ""
+                        );
+
+
+                        const response =
+                            await fetch(
+                                BACKEND_URL + "/login",
+                                {
+                                    method: "POST",
+
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json"
+                                    },
+
+                                    body:
+                                        JSON.stringify({
+                                            username:
+                                                username,
+
+                                            password:
+                                                password
+                                        })
+                                }
+                            );
+
+
+                        const data =
+                            await response.json();
+
+
+                        if (data.success) {
+
+                            localStorage.setItem(
+                                "kazehanaUser",
+
+                                JSON.stringify({
+                                    user_id:
+                                        data.user_id,
+
+                                    username:
+                                        data.username
+                                })
+                            );
+
+
+                            showMessage(
+                                "Login successful! 🌸",
+                                "success"
+                            );
+
+
+                            setTimeout(
+                                () => {
+
+                                    showLoggedInProfile(
+                                        data
+                                    );
+
+                                },
+                                700
+                            );
+
+                        }
+
+                        else {
+
+                            showMessage(
+                                data.message ||
+                                "Login failed.",
+                                "error"
+                            );
+
+                        }
+
+                    }
+
+                    catch (error) {
+
+                        console.error(error);
+
+                        showMessage(
+                            "Cannot connect to the Kazehana backend.",
+                            "error"
+                        );
+
+                    }
+
+                }
+            );
+
+
+        /* =========================
+           SIGN OUT
+        ========================= */
+
+        document
+            .getElementById("signout-btn")
+            .addEventListener(
+                "click",
+                () => {
+
+                    localStorage.removeItem(
+                        "kazehanaUser"
+                    );
+
+
+                    showGuestView();
+
+                }
+            );
+
+    </script>
+
+</body>
+
+</html>

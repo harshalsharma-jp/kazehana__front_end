@@ -1,0 +1,2642 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Article | Kazehana</title>
+
+    <style>
+        #starfield {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* =========================================
+           RESET & VARIABLES
+        ========================================== */
+
+        :root {
+
+            --bg-deep: #020203;
+            --bg-base: #050506;
+
+            --text: #f2f2f4;
+            --muted: #90939c;
+            --soft-muted: #5f6269;
+
+            --accent: #5e6ad2;
+            --accent-light: #aab2ff;
+
+            --border:
+                rgba(255, 255, 255, 0.08);
+
+            --glass:
+                rgba(255, 255, 255, 0.035);
+
+            --ease:
+                cubic-bezier(0.16, 1, 0.3, 1);
+
+        }
+
+
+
+        * {
+
+            margin: 0;
+            padding: 0;
+
+            box-sizing: border-box;
+
+        }
+
+
+        html {
+
+            scroll-behavior: smooth;
+
+        }
+
+
+        body {
+
+            min-height: 100vh;
+
+            overflow-x: hidden;
+
+            background:
+                radial-gradient(ellipse at top,
+                    #0b0b10 0%,
+                    #050506 48%,
+                    #020203 100%);
+
+            color:
+                var(--text);
+
+            font-family:
+                "Inter",
+                sans-serif;
+
+        }
+
+
+        a {
+
+            color: inherit;
+
+            text-decoration: none;
+
+        }
+
+
+        img {
+
+            display: block;
+
+            max-width: 100%;
+
+        }
+
+
+        /* =========================================
+           AMBIENT BACKGROUND
+        ========================================== */
+
+        .ambient-background {
+
+            position: fixed;
+
+            inset: 0;
+
+            overflow: hidden;
+
+            pointer-events: none;
+
+            z-index: -10;
+
+        }
+
+
+        .grid-overlay {
+
+            position: absolute;
+
+            inset: 0;
+
+            opacity: 0.025;
+
+            background-image:
+
+                linear-gradient(rgba(255, 255, 255, 0.14) 1px,
+                    transparent 1px),
+
+                linear-gradient(90deg,
+                    rgba(255, 255, 255, 0.14) 1px,
+                    transparent 1px);
+
+            background-size:
+                64px 64px;
+
+        }
+
+
+        .blob {
+
+            position: absolute;
+
+            border-radius: 50%;
+
+            filter:
+                blur(140px);
+
+            animation:
+                floatBlob 14s ease-in-out infinite;
+
+        }
+
+
+        .blob-one {
+
+            width: 800px;
+            height: 550px;
+
+            top: -320px;
+            left: 50%;
+
+            transform:
+                translateX(-50%);
+
+            background:
+                rgba(94, 106, 210, 0.18);
+
+        }
+
+
+        .blob-two {
+
+            width: 500px;
+            height: 700px;
+
+            top: 40%;
+            left: -300px;
+
+            background:
+                rgba(90, 80, 170, 0.09);
+
+            animation-delay:
+                -5s;
+
+        }
+
+
+        .blob-three {
+
+            width: 550px;
+            height: 600px;
+
+            bottom: -250px;
+            right: -300px;
+
+            background:
+                rgba(70, 95, 210, 0.09);
+
+            animation-delay:
+                -9s;
+
+        }
+
+
+        @keyframes floatBlob {
+
+            0%,
+            100% {
+
+                translate:
+                    0 0;
+
+            }
+
+
+            50% {
+
+                translate:
+                    0 -30px;
+
+            }
+
+        }
+
+
+        /* =========================================
+           BLUE MOUSE GLOW
+        ========================================== */
+
+        .mouse-glow {
+
+            position: fixed;
+
+            top: 0;
+            left: 0;
+
+            width: 360px;
+            height: 360px;
+
+            border-radius: 50%;
+
+            background:
+
+                radial-gradient(circle,
+
+                    rgba(94, 106, 210, 0.17) 0%,
+
+                    rgba(94, 106, 210, 0.07) 32%,
+
+                    transparent 72%);
+
+            filter:
+                blur(18px);
+
+            pointer-events: none;
+
+            z-index: -1;
+
+            transform:
+
+                translate(calc(var(--mouse-x, -500px) - 50%),
+
+                    calc(var(--mouse-y, -500px) - 50%));
+
+            transition:
+                transform 0.08s linear;
+
+        }
+
+
+        /* =========================================
+           JAPAN MAP
+        ========================================== */
+
+        .japan-map {
+
+            position: fixed;
+
+            top: 50%;
+            bottom: 50%;
+            right: 0%;
+
+            width:
+                min(42vw, 650px);
+
+            transform:
+                translateY(-50%);
+
+            opacity: 1;
+
+            filter:
+
+                grayscale(1) brightness(1.8) drop-shadow(0 0 60px rgba(94, 106, 210, 0.25));
+
+            pointer-events: none;
+
+            z-index: -4;
+
+        }
+
+
+        .japan-map img {
+
+            width: 100%;
+
+            opacity: 0.8;
+            animation:
+                mapFloat 14s ease-in-out infinite;
+
+        }
+
+        @keyframes mapFloat {
+
+            0%,
+            100% {
+
+                transform:
+
+                    translateY(-50%) rotate(-3deg);
+
+            }
+
+
+            50% {
+
+                transform:
+
+                    translateY(calc(-50% - 18px)) rotate(-1deg);
+
+            }
+
+        }
+
+
+        /* =========================================
+           NAVIGATION
+        ========================================== */
+
+        .top-nav {
+
+            width:
+                min(1240px,
+                    calc(100% - 48px));
+
+            margin:
+                0 auto;
+
+            padding:
+                28px 0;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            position:
+                relative;
+
+            z-index:
+                5;
+
+        }
+
+
+        .back-button {
+
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            gap:
+                10px;
+
+            padding:
+                10px 16px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                999px;
+
+            background:
+                rgba(255, 255, 255, 0.035);
+
+            backdrop-filter:
+                blur(12px);
+
+            -webkit-backdrop-filter:
+                blur(12px);
+
+            color:
+                var(--muted);
+
+            font-size:
+                13px;
+
+            font-weight:
+                500;
+
+            transition:
+
+                transform 250ms var(--ease),
+
+                border-color 250ms ease,
+
+                color 250ms ease,
+
+                background 250ms ease;
+
+        }
+
+
+        .back-button:hover {
+
+            transform:
+                translateX(-4px);
+
+            color:
+                #ffffff;
+
+            border-color:
+                rgba(154, 164, 255, 0.30);
+
+            background:
+                rgba(94, 106, 210, 0.10);
+
+        }
+
+
+        .brand {
+
+            font-size:
+                14px;
+
+            font-weight:
+                700;
+
+            letter-spacing:
+                -0.04em;
+
+        }
+
+
+        .brand span {
+
+            color:
+                var(--accent-light);
+
+        }
+
+
+        /* =========================================
+           ARTICLE HEADER
+        ========================================== */
+
+        .article-header {
+
+            width:
+                min(1000px,
+                    calc(100% - 48px));
+
+            margin:
+                0 auto;
+
+            padding:
+                85px 0 65px;
+
+            position:
+                relative;
+
+            z-index:
+                1;
+
+        }
+
+
+        .article-meta {
+
+            display:
+                flex;
+
+            justify-content:
+                center;
+
+            flex-wrap:
+                wrap;
+
+            gap:
+                10px;
+
+            margin-bottom:
+                30px;
+
+            color:
+                var(--accent-light);
+
+            font-family:
+                "DM Mono",
+                monospace;
+
+            font-size:
+                10px;
+
+            font-weight:
+                500;
+
+            letter-spacing:
+                0.16em;
+
+            text-transform:
+                uppercase;
+
+        }
+
+
+        .meta-divider {
+
+            color:
+                rgba(255, 255, 255, 0.25);
+
+        }
+
+
+        .article-title {
+
+            max-width:
+                950px;
+
+            margin:
+                0 auto;
+
+            text-align:
+                center;
+
+            font-size:
+                clamp(3.4rem,
+                    8vw,
+                    7.5rem);
+
+            font-weight:
+                700;
+
+            line-height:
+                0.9;
+
+            letter-spacing:
+                -0.07em;
+
+            text-wrap:
+                balance;
+
+        }
+
+
+        .article-excerpt {
+
+            max-width:
+                700px;
+
+            margin:
+                35px auto 0;
+
+            color:
+                var(--muted);
+
+            text-align:
+                center;
+
+            font-size:
+                clamp(1rem,
+                    2vw,
+                    1.2rem);
+
+            line-height:
+                1.8;
+
+        }
+
+
+        .article-tags {
+
+            display:
+                flex;
+
+            justify-content:
+                center;
+
+            flex-wrap:
+                wrap;
+
+            gap:
+                8px;
+
+            margin-top:
+                30px;
+
+        }
+
+
+        .tag {
+
+            padding:
+                7px 11px;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.08);
+
+            border-radius:
+                999px;
+
+            background:
+                rgba(255, 255, 255, 0.025);
+
+            backdrop-filter:
+                blur(10px);
+
+            color:
+                rgba(255, 255, 255, 0.50);
+
+            font-size:
+                10px;
+
+        }
+
+
+        /* =========================================
+           HERO IMAGE
+        ========================================== */
+
+        .hero-wrapper {
+
+            width:
+                min(1240px,
+                    calc(100% - 48px));
+
+            margin:
+                0 auto;
+
+            position:
+                relative;
+
+            z-index:
+                1;
+
+        }
+
+
+        .hero-image-container {
+
+            position:
+                relative;
+
+            min-height:
+                400px;
+
+            max-height:
+                720px;
+
+            overflow:
+                hidden;
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                26px;
+
+            background:
+                rgba(255, 255, 255, 0.025);
+
+            box-shadow:
+
+                0 40px 100px rgba(0, 0, 0, 0.40),
+
+                0 0 100px rgba(94, 106, 210, 0.06);
+
+        }
+
+
+        .hero-image {
+
+            width: 100%;
+            height: 100%;
+
+            min-height:
+                400px;
+
+            max-height:
+                720px;
+
+            object-fit:
+                cover;
+
+        }
+
+
+        .hero-image-gradient {
+
+            position: absolute;
+
+            inset: 0;
+
+            background:
+
+                linear-gradient(to bottom,
+
+                    transparent 55%,
+
+                    rgba(2, 2, 3, 0.25));
+
+            pointer-events: none;
+
+        }
+
+
+        /* =========================================
+           ARTICLE DIVIDER
+        ========================================== */
+
+        .article-divider {
+
+            width:
+                min(720px,
+                    calc(100% - 48px));
+
+            margin:
+                90px auto 0;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                18px;
+
+            color:
+                rgba(255, 255, 255, 0.30);
+
+            font-family:
+                "DM Mono",
+                monospace;
+
+            font-size:
+                10px;
+
+            letter-spacing:
+                0.16em;
+
+            text-transform:
+                uppercase;
+
+        }
+
+
+        .article-divider::before,
+        .article-divider::after {
+
+            content:
+                "";
+
+            height:
+                1px;
+
+            flex:
+                1;
+
+            background:
+                var(--border);
+
+        }
+
+
+        /* =========================================
+           ARTICLE CONTENT
+        ========================================== */
+
+        .article-content {
+
+            width:
+                min(720px,
+                    calc(100% - 48px));
+
+            margin:
+                55px auto 0;
+
+            padding-bottom:
+                120px;
+
+            position:
+                relative;
+
+            z-index:
+                1;
+
+        }
+
+
+        .article-content p {
+
+            margin:
+                0 0 26px;
+
+            color:
+                #c7c7cc;
+
+            font-family:
+                "Playfair Display",
+                Georgia,
+                serif;
+
+            font-size:
+                clamp(1.15rem,
+                    2vw,
+                    1.32rem);
+
+            line-height:
+                1.95;
+
+            letter-spacing:
+                -0.01em;
+
+        }
+
+
+        .article-content h1,
+        .article-content h2,
+        .article-content h3 {
+
+            color:
+                #f5f5f7;
+
+            font-family:
+                "Inter",
+                sans-serif;
+
+            font-weight:
+                700;
+
+            letter-spacing:
+                -0.045em;
+
+        }
+
+
+        .article-content h1 {
+
+            margin:
+                70px 0 25px;
+
+            font-size:
+                clamp(2.2rem,
+                    5vw,
+                    3.8rem);
+
+            line-height:
+                0.95;
+
+        }
+
+
+        .article-content h2 {
+
+            margin:
+                60px 0 22px;
+
+            font-size:
+                clamp(1.8rem,
+                    4vw,
+                    2.8rem);
+
+            line-height:
+                1;
+
+        }
+
+
+        .article-content h3 {
+
+            margin:
+                45px 0 18px;
+
+            font-size:
+                clamp(1.35rem,
+                    3vw,
+                    1.8rem);
+
+            line-height:
+                1.1;
+
+        }
+
+
+        .article-content strong {
+
+            color:
+                #f3f3f5;
+
+            font-weight:
+                700;
+
+        }
+
+
+        .article-content em {
+
+            color:
+                #d3d6f9;
+
+        }
+
+
+        .article-content a {
+
+            color:
+                var(--accent-light);
+
+            border-bottom:
+                1px solid rgba(154, 164, 255, 0.35);
+
+            transition:
+                color 200ms ease;
+
+        }
+
+
+        .article-content a:hover {
+
+            color:
+                #ffffff;
+
+        }
+
+
+        .article-content blockquote {
+
+            margin:
+                45px 0;
+
+            padding:
+                10px 0 10px 28px;
+
+            border-left:
+                2px solid var(--accent);
+
+            color:
+                #dedee5;
+
+            font-family:
+                "Playfair Display",
+                Georgia,
+                serif;
+
+            font-size:
+                clamp(1.4rem,
+                    3vw,
+                    1.9rem);
+
+            font-style:
+                italic;
+
+            line-height:
+                1.55;
+
+        }
+
+
+        .article-content ul,
+        .article-content ol {
+
+            margin:
+                0 0 28px 28px;
+
+            color:
+                #c7c7cc;
+
+            font-family:
+                "Playfair Display",
+                Georgia,
+                serif;
+
+            font-size:
+                clamp(1.1rem,
+                    2vw,
+                    1.28rem);
+
+            line-height:
+                1.9;
+
+        }
+
+
+        .article-content li {
+
+            margin-bottom:
+                8px;
+
+            padding-left:
+                5px;
+
+        }
+
+
+        /* =========================================
+           ARTICLE END
+        ========================================== */
+
+        .article-end {
+
+            width:
+                min(720px,
+                    calc(100% - 48px));
+
+            margin:
+                0 auto 100px;
+
+            padding-top:
+                55px;
+
+            border-top:
+                1px solid var(--border);
+
+            position:
+                relative;
+
+            z-index:
+                1;
+
+        }
+
+
+        .article-end-inner {
+
+            padding:
+                35px;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.07);
+
+            border-radius:
+                20px;
+
+            background:
+                rgba(255, 255, 255, 0.025);
+
+            backdrop-filter:
+                blur(16px);
+
+            -webkit-backdrop-filter:
+                blur(16px);
+
+            text-align:
+                center;
+
+        }
+
+
+        .article-end-label {
+
+            color:
+                var(--accent-light);
+
+            font-family:
+                "DM Mono",
+                monospace;
+
+            font-size:
+                10px;
+
+            letter-spacing:
+                0.16em;
+
+            text-transform:
+                uppercase;
+
+        }
+
+
+        .article-end h3 {
+
+            margin-top:
+                14px;
+
+            font-size:
+                1.5rem;
+
+            letter-spacing:
+                -0.04em;
+
+        }
+
+
+        .article-end p {
+
+            margin-top:
+                12px;
+
+            color:
+                var(--muted);
+
+            font-size:
+                14px;
+
+            line-height:
+                1.7;
+
+        }
+
+
+        .back-to-stories {
+
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            gap:
+                10px;
+
+            margin-top:
+                25px;
+
+            padding:
+                11px 17px;
+
+            border:
+                1px solid rgba(154, 164, 255, 0.20);
+
+            border-radius:
+                999px;
+
+            background:
+                rgba(94, 106, 210, 0.09);
+
+            color:
+                #dce0ff;
+
+            font-size:
+                12px;
+
+            font-weight:
+                600;
+
+            transition:
+
+                transform 250ms var(--ease),
+
+                background 250ms ease;
+
+        }
+
+
+        .back-to-stories:hover {
+
+            transform:
+                translateY(-3px);
+
+            background:
+                rgba(94, 106, 210, 0.18);
+
+        }
+
+
+        /* =========================================
+           STATUS / LOADING
+        ========================================== */
+
+        .status-page {
+
+            width:
+                min(720px,
+                    calc(100% - 48px));
+
+            min-height:
+                65vh;
+
+            margin:
+                0 auto;
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            text-align:
+                center;
+
+            position:
+                relative;
+
+            z-index:
+                1;
+
+        }
+
+
+        .loader {
+
+            width: 38px;
+            height: 38px;
+
+            margin-bottom:
+                24px;
+
+            border:
+                2px solid rgba(255, 255, 255, 0.10);
+
+            border-top-color:
+                var(--accent-light);
+
+            border-radius:
+                50%;
+
+            animation:
+                spin 0.8s linear infinite;
+
+        }
+
+
+        @keyframes spin {
+
+            to {
+
+                transform:
+                    rotate(360deg);
+
+            }
+
+        }
+
+
+        .status-page h1 {
+
+            font-size:
+                clamp(2rem,
+                    5vw,
+                    4rem);
+
+            letter-spacing:
+                -0.06em;
+
+        }
+
+
+        .status-page p {
+
+            max-width:
+                450px;
+
+            margin-top:
+                18px;
+
+            color:
+                var(--muted);
+
+            font-size:
+                14px;
+
+            line-height:
+                1.7;
+
+        }
+
+
+        /* =========================================
+           FOOTER
+        ========================================== */
+
+        .page-footer {
+
+            width:
+                min(1240px,
+                    calc(100% - 48px));
+
+            margin:
+                0 auto;
+
+            padding:
+                38px 0;
+
+            border-top:
+                1px solid var(--border);
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            color:
+                rgba(255, 255, 255, 0.30);
+
+            font-size:
+                11px;
+
+            position:
+                relative;
+
+            z-index:
+                1;
+
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+        ========================================== */
+
+        @media (max-width: 750px) {
+
+            .top-nav,
+            .hero-wrapper,
+            .page-footer {
+
+                width:
+                    calc(100% - 32px);
+
+            }
+
+
+            .article-header {
+
+                width:
+                    calc(100% - 32px);
+
+                padding:
+                    65px 0 50px;
+
+            }
+
+
+            .article-title {
+
+                font-size:
+                    clamp(3rem,
+                        14vw,
+                        5rem);
+
+            }
+
+
+            .hero-image-container {
+
+                min-height:
+                    300px;
+
+                border-radius:
+                    18px;
+
+            }
+
+
+            .hero-image {
+
+                min-height:
+                    300px;
+
+            }
+
+
+            .article-content {
+
+                width:
+                    calc(100% - 40px);
+
+            }
+
+
+            .article-divider {
+
+                width:
+                    calc(100% - 40px);
+
+                margin-top:
+                    65px;
+
+            }
+
+
+            .article-end {
+
+                width:
+                    calc(100% - 40px);
+
+            }
+
+
+            .japan-map {
+
+                width:
+                    100vw;
+
+                right:
+                    -35%;
+
+                opacity:
+                    0.025;
+
+            }
+
+        }
+
+
+        @media (max-width: 520px) {
+
+            .brand {
+
+                display:
+                    none;
+
+            }
+
+
+            .article-meta {
+
+                font-size:
+                    9px;
+
+            }
+
+
+            .article-title {
+
+                line-height:
+                    0.92;
+
+            }
+
+
+            .article-content p {
+
+                font-size:
+                    1.1rem;
+
+                line-height:
+                    1.85;
+
+            }
+
+
+            .article-end-inner {
+
+                padding:
+                    28px 20px;
+
+            }
+
+
+            .page-footer {
+
+                flex-direction:
+                    column;
+
+                align-items:
+                    flex-start;
+
+                gap:
+                    10px;
+
+            }
+
+        }
+
+
+        /* =========================================
+           REDUCED MOTION
+        ========================================== */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+
+                animation-duration:
+                    0.01ms !important;
+
+                animation-iteration-count:
+                    1 !important;
+
+                transition-duration:
+                    0.01ms !important;
+
+                scroll-behavior:
+                    auto !important;
+
+            }
+
+        }
+
+        .japan-map {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+
+            transform: translate(-50%, -50%);
+
+            width: 80vw;
+            max-width: 900px;
+
+            opacity: 0.6999;
+            pointer-events: none;
+            filter: invert(1);
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================
+         MOUSE GLOW
+    ========================================== -->
+
+    <div class="mouse-glow"></div>
+
+
+    <!-- =========================================
+         AMBIENT BACKGROUND
+    ========================================== -->
+
+    <div class="ambient-background">
+
+        <canvas id="starfield"></canvas>
+
+        <div class="grid-overlay"></div>
+
+        <div class="blob blob-one"></div>
+
+        <div class="blob blob-two"></div>
+
+        <div class="blob blob-three"></div>
+
+    </div>
+
+
+    <!-- =========================================
+         JAPAN MAP
+    ========================================== -->
+
+    <div class="ambient-background">
+        <div class="grid-overlay"></div>
+
+        <!-- Working Japan Map SVG CDN -->
+        <div class="japan-map">
+            <img src="https://cdn.jsdelivr.net/gh/djaiss/mapsicon@master/all/jp/vector.svg" alt="" aria-hidden="true">
+        </div>
+
+        <div class="blob blob-one"></div>
+        <div class="blob blob-two"></div>
+        <div class="blob blob-three"></div>
+        <div class="blob blob-four"></div>
+    </div>
+
+
+    <!-- =========================================
+         NAVIGATION
+    ========================================== -->
+
+    <nav class="top-nav">
+
+        <a href="javascript:history.back()" class="back-button">
+            ← Back
+        </a>
+
+
+        <div class="brand">
+
+            KAZE<span>HANA</span>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =========================================
+         MAIN ARTICLE CONTAINER
+
+         JavaScript will replace this loading screen
+         with the real article from Sanity.
+    ========================================== -->
+
+    <div id="app">
+
+        <main class="status-page">
+
+            <div class="loader"></div>
+
+            <h1>
+                Opening story...
+            </h1>
+
+            <p>
+                Kazehana is gathering this story
+                from the archive.
+            </p>
+
+        </main>
+
+    </div>
+
+
+    <!-- =========================================
+         FOOTER
+    ========================================== -->
+
+    <footer class="page-footer">
+
+        <span>
+            © 2026 Kazehana
+        </span>
+
+        <span>
+            Explore Japan, one story at a time.
+        </span>
+
+    </footer>
+
+
+    <script>
+
+        /* =========================================
+           GET ARTICLE SLUG FROM URL
+        ========================================== */
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const slug =
+            params.get("slug");
+
+
+        const app =
+            document.getElementById("app");
+
+
+        /* =========================================
+           API BASE URL
+        ========================================== */
+
+        const API_BASE =
+            "http://127.0.0.1:5000";
+
+
+        /* =========================================
+           ESCAPE HTML
+
+           Prevents article data from being inserted
+           directly as unsafe HTML.
+        ========================================== */
+
+        function escapeHtml(value) {
+
+            if (
+                value === null ||
+                value === undefined
+            ) {
+
+                return "";
+
+            }
+
+
+            const div =
+                document.createElement("div");
+
+
+            div.textContent =
+                String(value);
+
+
+            return div.innerHTML;
+
+        }
+
+
+        /* =========================================
+           FORMAT TEXT
+
+           Turns:
+           "food-drinks"
+
+           Into:
+           "Food Drinks"
+        ========================================== */
+
+        function formatText(value) {
+
+            if (!value) {
+
+                return "";
+
+            }
+
+
+            return value
+
+                .replace(/-/g, " ")
+
+                .replace(
+                    /\b\w/g,
+                    letter =>
+                        letter.toUpperCase()
+                );
+
+        }
+
+
+        /* =========================================
+           RENDER INLINE PORTABLE TEXT MARKS
+        ========================================== */
+
+        function renderSpan(span) {
+
+            let text =
+                escapeHtml(
+                    span.text || ""
+                );
+
+
+            const marks =
+                span.marks || [];
+
+
+            marks.forEach(
+                mark => {
+
+                    if (
+                        mark === "strong"
+                    ) {
+
+                        text =
+                            `<strong>${text}</strong>`;
+
+                    }
+
+
+                    else if (
+                        mark === "em"
+                    ) {
+
+                        text =
+                            `<em>${text}</em>`;
+
+                    }
+
+
+                    else if (
+                        mark === "code"
+                    ) {
+
+                        text =
+                            `<code>${text}</code>`;
+
+                    }
+
+                }
+            );
+
+
+            return text;
+
+        }
+
+
+        /* =========================================
+           GET BLOCK TEXT
+        ========================================== */
+
+        function getBlockText(block) {
+
+            if (
+                !block.children
+            ) {
+
+                return "";
+
+            }
+
+
+            return block.children
+
+                .map(
+                    child =>
+                        renderSpan(child)
+                )
+
+                .join("");
+
+        }
+
+
+        /* =========================================
+           RENDER SANITY PORTABLE TEXT
+
+           Supports:
+
+           normal
+           h1
+           h2
+           h3
+           blockquote
+
+           bullet lists
+           numbered lists
+        ========================================== */
+
+        function renderPortableText(blocks) {
+
+            if (
+                !blocks ||
+                !Array.isArray(blocks) ||
+                blocks.length === 0
+            ) {
+
+                return `
+
+                    <p>
+                        This article does not have
+                        any content yet.
+                    </p>
+
+                `;
+
+            }
+
+
+            let html = "";
+
+            let currentListType = null;
+
+
+            blocks.forEach(
+                block => {
+
+                    /*
+                    Close list if current block
+                    is not part of a list.
+                    */
+
+                    if (
+                        !block.listItem &&
+                        currentListType
+                    ) {
+
+                        html +=
+                            `</${currentListType}>`;
+
+
+                        currentListType =
+                            null;
+
+                    }
+
+
+                    /*
+                    LIST ITEM
+                    */
+
+                    if (
+                        block.listItem
+                    ) {
+
+                        const listType =
+                            block.listItem === "number"
+                                ? "ol"
+                                : "ul";
+
+
+                        if (
+                            currentListType !==
+                            listType
+                        ) {
+
+                            if (
+                                currentListType
+                            ) {
+
+                                html +=
+                                    `</${currentListType}>`;
+
+                            }
+
+
+                            html +=
+                                `<${listType}>`;
+
+
+                            currentListType =
+                                listType;
+
+                        }
+
+
+                        html += `
+
+                            <li>
+                                ${getBlockText(block)}
+                            </li>
+
+                        `;
+
+
+                        return;
+
+                    }
+
+
+                    /*
+                    REGULAR BLOCKS
+                    */
+
+                    const text =
+                        getBlockText(block);
+
+
+                    switch (
+                    block.style
+                    ) {
+
+                        case "h1":
+
+                            html += `
+
+                                <h1>
+                                    ${text}
+                                </h1>
+
+                            `;
+
+                            break;
+
+
+                        case "h2":
+
+                            html += `
+
+                                <h2>
+                                    ${text}
+                                </h2>
+
+                            `;
+
+                            break;
+
+
+                        case "h3":
+
+                            html += `
+
+                                <h3>
+                                    ${text}
+                                </h3>
+
+                            `;
+
+                            break;
+
+
+                        case "blockquote":
+
+                            html += `
+
+                                <blockquote>
+                                    ${text}
+                                </blockquote>
+
+                            `;
+
+                            break;
+
+
+                        default:
+
+                            html += `
+
+                                <p>
+                                    ${text}
+                                </p>
+
+                            `;
+
+                    }
+
+                }
+            );
+
+
+            /*
+            Close final list if needed
+            */
+
+            if (
+                currentListType
+            ) {
+
+                html +=
+                    `</${currentListType}>`;
+
+            }
+
+
+            return html;
+
+        }
+
+
+        /* =========================================
+           RENDER TAGS
+        ========================================== */
+
+        function renderTags(tags) {
+
+            if (
+                !tags ||
+                !Array.isArray(tags) ||
+                tags.length === 0
+            ) {
+
+                return "";
+
+            }
+
+
+            return `
+
+                <div class="article-tags">
+
+                    ${tags
+
+                    .map(
+                        tag =>
+
+                            `
+                                <span class="tag">
+                                    ${escapeHtml(tag)}
+                                </span>
+                                `
+                    )
+
+                    .join("")
+                }
+
+                </div>
+
+            `;
+
+        }
+
+
+        /* =========================================
+           CREATE BACK URL
+
+           Returns the user to the same
+           category/subcategory they came from.
+        ========================================== */
+
+        function getBackUrl(article) {
+
+            if (
+                article.category &&
+                article.subcategory
+            ) {
+
+                return
+
+                `subcategory.html?category=${encodeURIComponent(
+                    article.category
+                )
+                    }&subcategory=${encodeURIComponent(
+                        article.subcategory
+                    )
+                    }`;
+
+            }
+
+
+            return "article.html";
+
+        }
+
+
+        /* =========================================
+           RENDER ARTICLE
+        ========================================== */
+
+        function renderArticle(article) {
+
+            /*
+            Set browser tab title
+            */
+
+            document.title =
+                `${article.title} | Kazehana`;
+
+
+            const category =
+                formatText(
+                    article.category
+                );
+
+
+            const subcategory =
+                formatText(
+                    article.subcategory
+                );
+
+
+            const meta =
+                [
+
+                    category,
+
+                    subcategory
+
+                ]
+
+                    .filter(Boolean)
+
+                    .map(
+                        item =>
+                            `<span>${escapeHtml(item)}</span>`
+                    )
+
+                    .join(
+                        `<span class="meta-divider">·</span>`
+                    );
+
+
+            const heroImage =
+                article.heroImageUrl
+
+                    ? `
+
+                        <div class="hero-wrapper">
+
+                            <div
+                                class="hero-image-container"
+                            >
+
+                                <img
+                                    class="hero-image"
+
+                                    src="${escapeHtml(
+                        article.heroImageUrl
+                    )}"
+
+                                    alt="${escapeHtml(
+                        article.title
+                    )}"
+                                >
+
+                                <div
+                                    class="hero-image-gradient"
+                                ></div>
+
+                            </div>
+
+                        </div>
+
+                    `
+
+                    : "";
+
+
+            const backUrl =
+                getBackUrl(article);
+
+
+            app.innerHTML = `
+
+                <!-- ARTICLE HEADER -->
+
+                <header class="article-header">
+
+                    <div class="article-meta">
+
+                        ${meta}
+
+                    </div>
+
+
+                    <h1 class="article-title">
+
+                        ${escapeHtml(
+                article.title
+            )}
+
+                    </h1>
+
+
+                    <p class="article-excerpt">
+
+                        ${escapeHtml(
+                article.excerpt || ""
+            )}
+
+                    </p>
+
+
+                    ${renderTags(
+                article.tags
+            )}
+
+                </header>
+
+
+                <!-- HERO IMAGE -->
+
+                ${heroImage}
+
+
+                <!-- ARTICLE LABEL -->
+
+                <div class="article-divider">
+
+                    Article
+
+                </div>
+
+
+                <!-- PORTABLE TEXT CONTENT -->
+
+                <article
+                    class="article-content"
+                >
+
+                    ${renderPortableText(
+                article.content
+            )}
+
+                </article>
+
+
+                <!-- END OF ARTICLE -->
+
+                <section class="article-end">
+
+                    <div
+                        class="article-end-inner"
+                    >
+
+                        <span
+                            class="article-end-label"
+                        >
+                            End of story
+                        </span>
+
+
+                        <h3>
+                            Continue exploring Japan.
+                        </h3>
+
+
+                        <p>
+                            Every story is another way
+                            to understand the culture,
+                            history and world of Japan.
+                        </p>
+
+
+                        <a
+                            href="article.html"
+                            class="back-to-stories"
+                        >
+                            ← Back to collection
+                        </a>
+
+                    </div>
+
+                </section>
+
+            `;
+
+        }
+
+
+        /* =========================================
+           RENDER NOT FOUND
+        ========================================== */
+
+        function renderNotFound() {
+
+            app.innerHTML = `
+
+                <main class="status-page">
+
+                    <h1>
+                        Story not found.
+                    </h1>
+
+
+                    <p>
+                        This story may have been moved,
+                        unpublished or does not exist.
+                    </p>
+
+
+                    <a
+                        href="article.html"
+                        class="back-to-stories"
+                    >
+                        ← Explore Kazehana
+                    </a>
+
+                </main>
+
+            `;
+
+        }
+
+
+        /* =========================================
+           RENDER ERROR
+        ========================================== */
+
+        function renderError() {
+
+            app.innerHTML = `
+
+                <main class="status-page">
+
+                    <h1>
+                        Archive unavailable.
+                    </h1>
+
+
+                    <p>
+                        Kazehana couldn't connect to
+                        the story archive. Make sure
+                        your Flask backend is running.
+                    </p>
+
+
+                    <a
+                        href="javascript:location.reload()"
+                        class="back-to-stories"
+                    >
+                        Try again
+                    </a>
+
+                </main>
+
+            `;
+
+        }
+
+
+        /* =========================================
+           LOAD ARTICLE
+        ========================================== */
+
+        async function loadArticle() {
+
+            /*
+            No slug in URL
+            */
+
+            if (!slug) {
+
+                renderNotFound();
+
+                return;
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_BASE}/article/${encodeURIComponent(
+                            slug
+                        )
+                        }`
+                    );
+
+
+                if (
+                    !response.ok
+                ) {
+
+                    throw new Error(
+                        "Article request failed"
+                    );
+
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                /*
+                Your backend currently returns
+                response.json() directly.
+
+                But this also supports:
+                { result: article }
+                */
+
+                const article =
+                    data.result
+                        ? data.result
+                        : data;
+
+
+                if (
+                    !article ||
+                    !article.title
+                ) {
+
+                    renderNotFound();
+
+                    return;
+
+                }
+
+
+                renderArticle(
+                    article
+                );
+
+            }
+
+
+            catch (error) {
+
+                console.error(
+                    "Error loading article:",
+                    error
+                );
+
+
+                renderError();
+
+            }
+
+        }
+
+
+        /* =========================================
+           BLUE MOUSE GLOW
+        ========================================== */
+
+        document.addEventListener(
+            "mousemove",
+            event => {
+
+                document.documentElement.style.setProperty(
+
+                    "--mouse-x",
+
+                    `${event.clientX}px`
+
+                );
+
+
+                document.documentElement.style.setProperty(
+
+                    "--mouse-y",
+
+                    `${event.clientY}px`
+
+                );
+
+            }
+        );
+
+
+        /* =========================================
+           START
+        ========================================== */
+
+        loadArticle();
+
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initStars();
+        });
+
+        // --- Background Tiny Stars ---
+        let stars = [];
+        const STAR_COUNT = 540;
+
+        function initStars() {
+            stars = [];
+            for (let i = 0; i < STAR_COUNT; i++) {
+                stars.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    size: Math.random() * 1.2 + 0.3,
+                    baseAlpha: Math.random() * 0.7 + 0.3,
+                    alpha: Math.random(),
+                    twinkleSpeed: (Math.random() * 0.02 + 0.005) * (Math.random() < 0.5 ? 1 : -1),
+                    driftX: (Math.random() - 0.5) * 0.05,
+                    driftY: (Math.random() - 0.5) * 0.05
+                });
+            }
+        }
+
+        // --- Shooting Stars ---
+        let shootingStars = [];
+
+        function createShootingStar() {
+            shootingStars.push({
+                x: Math.random() * width * 0.8,
+                y: Math.random() * (height * 0.5),
+                length: Math.random() * 80 + 40,
+                speed: Math.random() * 8 + 6,
+                angle: Math.PI / 4, // 45 degrees downward movement
+                alpha: 1,
+                decay: Math.random() * 0.015 + 0.01,
+                size: Math.random() * 1.5 + 0.8
+            });
+        }
+
+        // Trigger random shooting star every 2-5 seconds
+        function scheduleShootingStar() {
+            const delay = Math.random() * 3000 + 2000;
+            setTimeout(() => {
+                createShootingStar();
+                scheduleShootingStar();
+            }, delay);
+        }
+
+        // --- Animation Loop ---
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            // 1. Draw static / drifting stars
+            stars.forEach(star => {
+                star.alpha += star.twinkleSpeed;
+                if (star.alpha >= 1 || star.alpha <= 0.2) {
+                    star.twinkleSpeed = -star.twinkleSpeed;
+                }
+
+                star.x += star.driftX;
+                star.y += star.driftY;
+
+                // Wrap around edges
+                if (star.x < 0) star.x = width;
+                if (star.x > width) star.x = 0;
+                if (star.y < 0) star.y = height;
+                if (star.y > height) star.y = 0;
+
+                ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha * star.baseAlpha})`;
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // 2. Draw shooting stars
+            for (let i = shootingStars.length - 1; i >= 0; i--) {
+                const s = shootingStars[i];
+
+                const endX = s.x - Math.cos(s.angle) * s.length;
+                const endY = s.y - Math.sin(s.angle) * s.length;
+
+                const gradient = ctx.createLinearGradient(s.x, s.y, endX, endY);
+                gradient.addColorStop(0, `rgba(255, 255, 255, ${s.alpha})`);
+                gradient.addColorStop(0.3, `rgba(174, 180, 255, ${s.alpha * 0.6})`);
+                gradient.addColorStop(1, `rgba(94, 106, 210, 0)`);
+
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = s.size;
+                ctx.beginPath();
+                ctx.moveTo(s.x, s.y);
+                ctx.lineTo(endX, endY);
+                ctx.stroke();
+
+                // Head glow point
+                ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.size * 1.2, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Update position and fade out
+                s.x += Math.cos(s.angle) * s.speed;
+                s.y += Math.sin(s.angle) * s.speed;
+                s.alpha -= s.decay;
+
+                if (s.alpha <= 0) {
+                    shootingStars.splice(i, 1);
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        initStars();
+        scheduleShootingStar();
+        animate();
+
+    </script>
+
+
+</body>
+
+</html>
