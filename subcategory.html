@@ -2714,6 +2714,21 @@
 
         }
 
+        function normalize(value) {
+            if (!value) return "";
+
+            return String(value)
+                .trim()
+                .toLowerCase()
+                .replace(/&/g, "and")
+                .replace(/\s+/g, "-")
+                .replace(/_/g, "-")
+                .replace(/[^a-z0-9-]/g, "")
+                .replace(/-+/g, "-")
+                .replace(/^-|-$/g, "");
+        }
+
+
 
         /* =========================================
            FETCH ARTICLES
