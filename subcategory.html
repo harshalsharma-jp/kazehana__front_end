@@ -2799,18 +2799,33 @@
                 and subcategory
                 */
 
-                const matchingArticles =
-                    allArticles.filter(
-                        article =>
+                console.log("URL Category:", category);
+                console.log("URL Subcategory:", subcategory);
 
-                            article.category ===
-                            category
+                console.log(
+                    "All articles:",
+                    allArticles.map(article => ({
+                        title: article.title,
+                        category: article.category,
+                        subcategory: article.subcategory
+                    }))
+                );
 
-                            &&
+                const normalizedCategory = normalize(category);
+                const normalizedSubcategory = normalize(subcategory);
 
-                            article.subcategory ===
-                            subcategory
+                const matchingArticles = allArticles.filter(article => {
+                    const articleCategory = normalize(article.category);
+                    const articleSubcategory = normalize(article.subcategory);
+
+                    return (
+                        articleCategory === normalizedCategory &&
+                        articleSubcategory === normalizedSubcategory
                     );
+                });
+
+                console.log("Matching articles:", matchingArticles);
+
 
 
                 /*
